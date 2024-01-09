@@ -33,7 +33,7 @@ class _SplashScreenState extends State<SplashScreen> {
           children: <Widget>[
             // Add your logo here (replace 'assets/logo1.png' with your actual asset path)
             Image.asset(
-              'logo1.png',
+              'images/logo1.png',
               width: 100.0, // Adjust the width as needed
               height: 100.0, // Adjust the height as needed
             ),

@@ -18,14 +18,20 @@ class NoteDetailPage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Title: ${note.judul}',
+              'Judul: ${note.judul}',
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
-            
             SizedBox(height: 10),
             Text(
-              'Content: ${note.isi}',
+              'Isi: ${note.isi}',
               style: TextStyle(fontSize: 16),
+            ),
+            SizedBox(height: 10),
+            Image.network(
+              'http://192.168.54.123:8000/storage/uploads/${note.gambar}',
+              width: double.infinity,
+              height: 200,
+              fit: BoxFit.cover,
             ),
           ],
         ),

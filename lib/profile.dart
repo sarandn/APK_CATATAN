@@ -6,7 +6,7 @@ class ProfilePage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text('Profile'),
-        backgroundColor: Colors.blue,
+        backgroundColor: Colors.brown, // Ganti warna app bar menjadi coklat
       ),
       body: Center(
         child: Padding(
@@ -16,8 +16,10 @@ class ProfilePage extends StatelessWidget {
             children: <Widget>[
               CircleAvatar(
                 radius: 60.0,
-                backgroundColor: Colors.grey,
-                backgroundImage: AssetImage('assets/profile_image.jpg'), // Ganti dengan path gambar sesuai kebutuhan
+                backgroundColor: Colors
+                    .brown, // Ganti warna background avatar menjadi coklat
+                backgroundImage: AssetImage(
+                    'images/foto.jpg'), // Ganti dengan path gambar sesuai kebutuhan
                 // Tambahkan shadow
                 child: Container(
                   decoration: BoxDecoration(
@@ -39,7 +41,7 @@ class ProfilePage extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 28.0,
                   fontWeight: FontWeight.bold,
-                  color: Colors.blue,
+                  color: Colors.brown, // Ganti warna teks menjadi coklat
                 ),
               ),
               SizedBox(height: 10.0),
@@ -56,7 +58,8 @@ class ProfilePage extends StatelessWidget {
                   // Fungsi yang akan dijalankan ketika tombol ditekan
                 },
                 style: ElevatedButton.styleFrom(
-                  primary: Colors.blue, // Warna latar belakang tombol
+                  primary: Colors
+                      .brown, // Ganti warna latar belakang tombol menjadi coklat
                   textStyle: TextStyle(
                     fontSize: 18.0,
                     fontWeight: FontWeight.bold,

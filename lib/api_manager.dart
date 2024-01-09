@@ -4,6 +4,12 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'dart:io';
 import 'dashboard.dart';
 
+enum RegistrationResult {
+  success,
+  emailAlreadyExists, duplicateEmail,
+  // tambahkan nilai enum lainnya sesuai kebutuhan
+}
+
 class ApiManager {
   final String baseUrl;
   final storage = FlutterSecureStorage();
@@ -24,18 +30,26 @@ class ApiManager {
     }
   }
 
-  Future<String?> addNoteDetail(String judul, String isi) async {
-    final response = await http.post(
-      Uri.parse('$baseUrl/addnote'),
-      headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-      body: {'judul': judul, 'isi': isi},
-    );
+  Future<String?> addNoteDetail(String judul, String isi, File? gambar) async {
+    // final response = await http.post(
+    //   Uri.parse('$baseUrl/addnote'),
+    //   headers: {'Content-Type': 'application/json'},
+    //   body: {'judul': judul, 'isi': isi, 'gambar': gambar},
+    // );
+    var request = http.MultipartRequest('POST', Uri.parse('$baseUrl/addnote'))
+      ..files.add(await http.MultipartFile.fromPath('gambar', gambar!.path))
+      ..fields['judul'] = judul
+      ..fields['isi'] = isi
+      ..fields['headers'] = "application/json";
+
+    var response = await request.send();
+    var responseBody = await response.stream.bytesToString();
 
     if (response.statusCode == 201) {
       final token = "Succesfully";
       return token;
     } else {
-      throw Exception('Failed to register, email sudah tersedia');
+      throw Exception('gagal');
     }
   }
 
@@ -50,25 +64,34 @@ class ApiManager {
     }
   }
 
-  Future<void> updateNote(String id, String judul, String isi) async {
-  final token = await storage.read(key: 'kode_rahassia');
-  final response = await http.put(
-    Uri.parse('$baseUrl/notes/$id'), // Sesuaikan dengan endpoint API Anda
-    headers: {
-      'Content-Type': 'application/json', // Ganti menjadi application/json
-      'Authorization': 'Bearer $token', // Tambahkan token
-    },
-    body: jsonEncode({
-      'judul': judul,
-      'isi': isi,
-    }),
-  );
+  Future<void> updateNote(
+      String id, String judul, String isi, File? gambar) async {
+    final token = await storage.read(key: 'kode_rahassia');
+    // final response = await http.put(
+    //   Uri.parse('$baseUrl/notes/$id'), // Sesuaikan dengan endpoint API Anda
+    //   headers: {
+    //     'Content-Type': 'application/json', // Ganti menjadi application/json
+    //     'Authorization': 'Bearer $token', // Tambahkan token
+    //   },
+    //   body: jsonEncode({
+    //     'judul': judul,
+    //     'isi': isi,
+    //   }),
+    // );
 
-  if (response.statusCode != 200) {
-    throw Exception('Failed to update note');
+    var request = http.MultipartRequest('POST', Uri.parse('$baseUrl/notes/$id'))
+      ..files.add(await http.MultipartFile.fromPath('gambar', gambar!.path))
+      ..fields['judul'] = judul
+      ..fields['isi'] = isi
+      ..fields['headers'] = "application/json";
+
+    var response = await request.send();
+    var responseBody = await response.stream.bytesToString();
+
+    if (response.statusCode != 200) {
+      throw Exception('Failed to update note');
+    }
   }
-}
-
 
   Future<String?> register(String name, String email, String password) async {
     final response = await http.post(
@@ -108,17 +131,16 @@ class ApiManager {
   }
 
   Future<void> deleteNote(String id) async {
-  final token = await storage.read(key: 'kode_rahassia');
-  final response = await http.delete(
-    Uri.parse('$baseUrl/notes/$id'),
-    headers: {'Authorization': 'Bearer $token'},
-  );
+    final token = await storage.read(key: 'kode_rahassia');
+    final response = await http.delete(
+      Uri.parse('$baseUrl/notes/$id'),
+      headers: {'Authorization': 'Bearer $token'},
+    );
 
-  if (response.statusCode != 200) {
-    throw Exception('Failed to delete notes');
+    if (response.statusCode != 200) {
+      throw Exception('Failed to delete notes');
+    }
   }
-}
-
 
   Future<String?> login(String email, String password) async {
     try {

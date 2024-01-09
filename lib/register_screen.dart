@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
-import 'login_screen.dart';
 import 'api_manager.dart';
 
 class RegisterScreen extends StatelessWidget {
-  // Controllers for full name, email, and password text fields
   final TextEditingController fullNameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
@@ -14,7 +13,7 @@ class RegisterScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text('Register'),
-        backgroundColor: Colors.brown, // Set app bar background color
+        backgroundColor: Colors.brown,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -22,43 +21,50 @@ class RegisterScreen extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              // Logo above the registration form
-              Image.asset(
-                'logo1.', // Replace with the path to your logo image
-                height: 80, // Adjust the height as needed
+              Container(
+                width: 80,
+                height: 80,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(
+                    color: Colors.brown,
+                    width: 2.0,
+                  ),
+                  color: Colors.brown,
+                ),
+                child: ClipOval(
+                  child: Image.asset(
+                    'images/logo1.png',
+                    fit: BoxFit.cover,
+                  ),
+                ),
               ),
-              SizedBox(height: 16), // Add some spacing
-
-              // Registration form with full name, email, and password fields
+              SizedBox(height: 16),
               TextField(
                 controller: fullNameController,
                 decoration: InputDecoration(
-                  labelText: 'Full Name',
-                  prefixIcon: Icon(Icons.person), // Add person icon
+                  labelText: 'Nama Lengkap',
+                  prefixIcon: Icon(Icons.person),
                 ),
               ),
-              SizedBox(height: 16), // Add some spacing
-
+              SizedBox(height: 16),
               TextField(
                 controller: emailController,
                 decoration: InputDecoration(
                   labelText: 'Email',
-                  prefixIcon: Icon(Icons.email), // Add email icon
+                  prefixIcon: Icon(Icons.email),
                 ),
               ),
-              SizedBox(height: 16), // Add some spacing
-
+              SizedBox(height: 16),
               TextField(
                 controller: passwordController,
                 obscureText: true,
                 decoration: InputDecoration(
                   labelText: 'Password',
-                  prefixIcon: Icon(Icons.lock), // Add lock icon
+                  prefixIcon: Icon(Icons.lock),
                 ),
               ),
-              SizedBox(height: 24), // Add some spacing
-
-              // "Register" button
+              SizedBox(height: 24),
               ElevatedButton(
                 onPressed: () async {
                   try {
@@ -67,32 +73,69 @@ class RegisterScreen extends StatelessWidget {
                     final password = passwordController.text;
                     final apiManager =
                         Provider.of<ApiManager>(context, listen: false);
-                    await apiManager.register(name, username, password);
-                    // Show a toast on successful registration
 
-                    Navigator.pushReplacementNamed(context, '/login');
-                    // Handle successful registration
+                    // Panggil metode register dari ApiManager
+                    final registrationResult =
+                        await apiManager.register(name, username, password);
+
+                    if (registrationResult == RegistrationResult.success) {
+                      // Registrasi berhasil
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text("Registrasi berhasil!"),
+                          duration: Duration(seconds: 2),
+                        ),
+                      );
+
+                      await Future.delayed(Duration(seconds: 2));
+                      Navigator.pushReplacementNamed(context, '/login');
+                    
+                    } else if (registrationResult ==
+                        RegistrationResult.duplicateEmail) {
+                      // Email sudah terdaftar
+                      Fluttertoast.showToast(
+                        msg: "Registrasi gagal. Email sudah terdaftar.",
+                        toastLength: Toast.LENGTH_SHORT,
+                        gravity: ToastGravity.BOTTOM,
+                        backgroundColor: Colors.red,
+                        textColor: Colors.white,
+                        fontSize: 16.0,
+                      );
+                    } else {
+                      // Penanganan kesalahan registrasi lainnya
+                      Fluttertoast.showToast(
+                        msg: "Registrasi gagal. Coba lagi!",
+                        toastLength: Toast.LENGTH_SHORT,
+                        gravity: ToastGravity.BOTTOM,
+                        backgroundColor: Colors.red,
+                        textColor: Colors.white,
+                        fontSize: 16.0,
+                      );
+                    }
                   } catch (e) {
-                    print('Registration failed. Error: $e');
-                    // Handle registration failure
+                    print('Registrasi gagal. Error: $e');
+                    // Handle kegagalan registrasi
+                    Fluttertoast.showToast(
+                      msg: "Registrasi gagal. Coba lagi!",
+                      toastLength: Toast.LENGTH_SHORT,
+                      gravity: ToastGravity.BOTTOM,
+                      backgroundColor: Colors.red,
+                      textColor: Colors.white,
+                      fontSize: 16.0,
+                    );
                   }
-
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(builder: (context) => LoginScreen()),
-                  );
                 },
                 style: ElevatedButton.styleFrom(
-                  primary: Colors.white, // Set button background color
+                  primary: Colors.brown,
                 ),
                 child: Padding(
                   padding: const EdgeInsets.symmetric(vertical: 12),
                   child: Text(
-                    'Register',
+                    'Daftar',
                     style: TextStyle(
                       fontSize: 18,
-                      color: Colors.brown,),
-                    
+                      color: Colors.white,
+                    ),
                   ),
                 ),
               ),

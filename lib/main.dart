@@ -13,24 +13,28 @@ void main() {
 
 class MyApp extends StatelessWidget {
   final ApiManager apiManager =
-      ApiManager(baseUrl: 'http://localhost:8000/api');
+      ApiManager(baseUrl: 'http://192.168.54.123:8000/api');
+
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
-        providers: [
-          ChangeNotifierProvider(create: (_) => UserManager()),
-          Provider.value(value: apiManager),
-        ],
-        child: MaterialApp(
-          title: 'Flutter Auth CRUD Example',
-          initialRoute: '/',
-          routes: {
-            '/': (context) => SplashScreen(),
-            '/login': (context) => LoginScreen(),
-            '/register': (context) => RegisterScreen(),
-            '/dashboard': (context) => DashboardPage(),
-            '/update': (context) => DashboardPage(),
-          },
-        ));
+      providers: [
+        ChangeNotifierProvider(create: (_) => UserManager()),
+        Provider.value(value: apiManager),
+      ],
+      child: MaterialApp(
+        title: 'Flutter Auth CRUD Example',
+        initialRoute: '/',
+        debugShowCheckedModeBanner: false, // Menghilangkan banner debug
+        routes: {
+          '/': (context) => SplashScreen(),
+          '/login': (context) => LoginScreen(),
+          '/register': (context) => RegisterScreen(),
+          '/dashboard': (context) => DashboardPage(),
+          '/update': (context) => DashboardPage(),
+          '/addnote': (context) => DashboardPage(),
+        },
+      ),
+    );
   }
 }
