@@ -13,7 +13,7 @@ void main() {
 
 class MyApp extends StatelessWidget {
   final ApiManager apiManager =
-      ApiManager(baseUrl: 'http://192.168.54.123:8000/api');
+      ApiManager(baseUrl: 'http://192.168.216.123:8000/api');
 
   @override
   Widget build(BuildContext context) {

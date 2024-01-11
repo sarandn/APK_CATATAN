@@ -28,7 +28,7 @@ class NoteDetailPage extends StatelessWidget {
             ),
             SizedBox(height: 10),
             Image.network(
-              'http://192.168.54.123:8000/storage/uploads/${note.gambar}',
+              'http://192.168.216.123:8000/storage/uploads/${note.gambar}',
               width: double.infinity,
               height: 200,
               fit: BoxFit.cover,

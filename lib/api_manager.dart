@@ -6,7 +6,8 @@ import 'dashboard.dart';
 
 enum RegistrationResult {
   success,
-  emailAlreadyExists, duplicateEmail,
+  emailAlreadyExists,
+  duplicateEmail,
   // tambahkan nilai enum lainnya sesuai kebutuhan
 }
 
@@ -18,6 +19,20 @@ class ApiManager {
 
   Future<List<Note>> getNotes() async {
     final response = await http.get(Uri.parse('$baseUrl/dashboard'));
+
+    if (response.statusCode == 200) {
+      final jsonResponse = jsonDecode(response.body);
+      final List<Map<String, dynamic>> notesData =
+          List<Map<String, dynamic>>.from(jsonResponse);
+
+      return notesData.map((noteData) => Note.fromJson(noteData)).toList();
+    } else {
+      throw Exception('Failed to get notes');
+    }
+  }
+
+  Future<List<Note>> getUserNotes() async {
+    final response = await http.get(Uri.parse('$baseUrl/notes'));
 
     if (response.statusCode == 200) {
       final jsonResponse = jsonDecode(response.body);
@@ -46,7 +61,7 @@ class ApiManager {
     var responseBody = await response.stream.bytesToString();
 
     if (response.statusCode == 201) {
-      final token = "Succesfully";
+      final token = "Success";
       return token;
     } else {
       throw Exception('gagal');
@@ -100,8 +115,8 @@ class ApiManager {
       body: {'name': name, 'email': email, 'password': password},
     );
 
-    if (response.statusCode == 201) {
-      final token = "Succesfully";
+    if (response.statusCode == 200) {
+      final token = "Success";
       return token;
     } else {
       throw Exception('Failed to register, email sudah tersedia');

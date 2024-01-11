@@ -66,79 +66,75 @@ class RegisterScreen extends StatelessWidget {
               ),
               SizedBox(height: 24),
               ElevatedButton(
-                onPressed: () async {
-                  try {
-                    final name = fullNameController.text;
-                    final username = emailController.text;
-                    final password = passwordController.text;
-                    final apiManager =
-                        Provider.of<ApiManager>(context, listen: false);
+  onPressed: () async {
+    try {
+      final name = fullNameController.text;
+      final email = emailController.text;
+      final password = passwordController.text;
+      final apiManager = Provider.of<ApiManager>(context, listen: false);
 
-                    // Panggil metode register dari ApiManager
-                    final registrationResult =
-                        await apiManager.register(name, username, password);
+      // Panggil metode register dari ApiManager
+      final registrationResult = await apiManager.register(name, email, password);
 
-                    if (registrationResult == RegistrationResult.success) {
-                      // Registrasi berhasil
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text("Registrasi berhasil!"),
-                          duration: Duration(seconds: 2),
-                        ),
-                      );
+      if (registrationResult == "Success") {
+        // Registrasi berhasil
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text("Registrasi berhasil!"),
+            duration: Duration(seconds: 2),
+          ),
+        );
 
-                      await Future.delayed(Duration(seconds: 2));
-                      Navigator.pushReplacementNamed(context, '/login');
-                    
-                    } else if (registrationResult ==
-                        RegistrationResult.duplicateEmail) {
-                      // Email sudah terdaftar
-                      Fluttertoast.showToast(
-                        msg: "Registrasi gagal. Email sudah terdaftar.",
-                        toastLength: Toast.LENGTH_SHORT,
-                        gravity: ToastGravity.BOTTOM,
-                        backgroundColor: Colors.red,
-                        textColor: Colors.white,
-                        fontSize: 16.0,
-                      );
-                    } else {
-                      // Penanganan kesalahan registrasi lainnya
-                      Fluttertoast.showToast(
-                        msg: "Registrasi gagal. Coba lagi!",
-                        toastLength: Toast.LENGTH_SHORT,
-                        gravity: ToastGravity.BOTTOM,
-                        backgroundColor: Colors.red,
-                        textColor: Colors.white,
-                        fontSize: 16.0,
-                      );
-                    }
-                  } catch (e) {
-                    print('Registrasi gagal. Error: $e');
-                    // Handle kegagalan registrasi
-                    Fluttertoast.showToast(
-                      msg: "Registrasi gagal. Coba lagi!",
-                      toastLength: Toast.LENGTH_SHORT,
-                      gravity: ToastGravity.BOTTOM,
-                      backgroundColor: Colors.red,
-                      textColor: Colors.white,
-                      fontSize: 16.0,
-                    );
-                  }
-                },
-                style: ElevatedButton.styleFrom(
-                  primary: Colors.brown,
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 12),
-                  child: Text(
-                    'Daftar',
-                    style: TextStyle(
-                      fontSize: 18,
-                      color: Colors.white,
-                    ),
-                  ),
-                ),
-              ),
+        // Navigate to login screen directly
+        Navigator.pushReplacementNamed(context, '/login');
+      } else if (registrationResult == "emailAlreadyExists") {
+        // Email sudah terdaftar
+        Fluttertoast.showToast(
+          msg: "Registrasi gagal. Email sudah terdaftar.",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 16.0,
+        );
+      } else {
+        // Penanganan kesalahan registrasi lainnya
+        Fluttertoast.showToast(
+          msg: "Registrasi gagal. Coba lagi!",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 16.0,
+        );
+      }
+    } catch (e) {
+      print('Registrasi gagal. Error: $e');
+      // Handle kegagalan registrasi
+      Fluttertoast.showToast(
+        msg: "Registrasi gagal. Coba lagi!",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0,
+      );
+    }
+  },
+  style: ElevatedButton.styleFrom(
+    primary: Colors.brown,
+  ),
+  child: Padding(
+    padding: const EdgeInsets.symmetric(vertical: 12),
+    child: Text(
+      'Daftar',
+      style: TextStyle(
+        fontSize: 18,
+        color: Colors.white,
+      ),
+    ),
+  ),
+),
             ],
           ),
         ),
@@ -146,3 +142,4 @@ class RegisterScreen extends StatelessWidget {
     );
   }
 }
+
